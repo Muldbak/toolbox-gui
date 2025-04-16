@@ -98,18 +98,32 @@ export function AnalysisForm() {
             <div>
               <Label className="flex items-center gap-2">
                 Frequency Step 1 (step1 hz)
-                <Tooltip content="Info about frequency step 1">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about frequency step 1</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Label>
               <Input type="text" className="mt-1" />
             </div>
             <div>
               <Label className="flex items-center gap-2">
                 Frequency Step 2 (step2 hz)
-                <Tooltip content="Info about frequency step 2">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about frequency step 2</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Label>
               <Input type="text" className="mt-1" />
             </div>

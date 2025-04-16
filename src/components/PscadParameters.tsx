@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -8,8 +9,31 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export function PscadParameters() {
+  const [numToolboxes, setNumToolboxes] = useState("1");
+  const [numProjects, setNumProjects] = useState("1");
+
+  const generateToolboxRows = () => {
+    return Array.from({ length: parseInt(numToolboxes) }, (_, index) => (
+      <TableRow key={`toolbox-${index}`}>
+        <TableCell>
+          <Input type="text" placeholder={`TB${index + 1}`} />
+        </TableCell>
+        <TableCell>
+          <Input type="text" placeholder="0.0" />
+        </TableCell>
+        <TableCell>
+          <Input type="text" placeholder="0.0" />
+        </TableCell>
+        <TableCell>
+          <Input type="text" placeholder="1" />
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
   return (
     <div className="grid grid-cols-3 gap-6 p-6">
       {/* PSCAD Config Section - Column 1 */}
@@ -129,34 +153,38 @@ export function PscadParameters() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Select>
+            <Select onValueChange={setNumProjects} value={numProjects}>
               <SelectTrigger>
                 <SelectValue placeholder="1" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <SelectItem key={num} value={num.toString()}>
+                    {num}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium">Project Name</label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Enter project name</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+          {Array.from({ length: parseInt(numProjects) }, (_, index) => (
+            <div key={`project-${index}`}>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium">Project Name {index + 1}</label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enter project name</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Input type="text" placeholder={`Project ${index + 1}`} className="mt-1" />
             </div>
-            <Input type="text" placeholder="Project 1" className="mt-1" />
-          </div>
+          ))}
         </div>
       </section>
 
@@ -178,41 +206,37 @@ export function PscadParameters() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Select>
+            <Select onValueChange={setNumToolboxes} value={numToolboxes}>
               <SelectTrigger>
                 <SelectValue placeholder="1" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <SelectItem key={num} value={num.toString()}>
+                    {num}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="border rounded-md p-4">
-            <table className="w-full">
-              <thead>
-                <tr className="text-sm font-medium">
-                  <th className="text-left pb-2">Toolbox ID</th>
-                  <th className="text-left pb-2">Vp_mag (kV)</th>
-                  <th className="text-left pb-2">Ip_mag (kA)</th>
-                  <th className="text-left pb-2">Project Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><Input type="text" className="w-full" /></td>
-                  <td><Input type="text" className="w-full" /></td>
-                  <td><Input type="text" className="w-full" /></td>
-                  <td><Input type="text" className="w-full" /></td>
-                </tr>
-              </tbody>
-            </table>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Toolbox ID</TableHead>
+                  <TableHead>Vp_mag (kV)</TableHead>
+                  <TableHead>Ip_mag (kA)</TableHead>
+                  <TableHead>Project Number</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {generateToolboxRows()}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </section>
     </div>
   );
 }
-
