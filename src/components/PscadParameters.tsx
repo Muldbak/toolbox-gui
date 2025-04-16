@@ -11,8 +11,8 @@ import { InfoIcon } from "lucide-react";
 
 export function PscadParameters() {
   return (
-    <div className="p-6 space-y-8">
-      {/* PSCAD Config Section */}
+    <div className="grid grid-cols-3 gap-6 p-6">
+      {/* PSCAD Config Section - Column 1 */}
       <section>
         <h2 className="text-lg font-semibold mb-4">PSCAD Config</h2>
         <div className="space-y-4">
@@ -94,7 +94,7 @@ export function PscadParameters() {
         </div>
       </section>
 
-      {/* Project Settings Section */}
+      {/* Project Settings Section - Column 2 */}
       <section>
         <h2 className="text-lg font-semibold mb-4">Project Settings</h2>
         <div className="space-y-4">
@@ -160,7 +160,7 @@ export function PscadParameters() {
         </div>
       </section>
 
-      {/* Toolbox Settings Section */}
+      {/* Toolbox Settings Section - Column 3 */}
       <section>
         <h2 className="text-lg font-semibold mb-4">Toolbox Settings</h2>
         <div className="space-y-4">

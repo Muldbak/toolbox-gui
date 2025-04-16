@@ -35,34 +35,55 @@ export function AnalysisForm() {
               <Input type="text" className="mt-1" />
             </div>
             <div>
-              <Label className="flex items-center gap-2">
-                Boundary Frequency [Bound (hz)]
-                <Tooltip content="Info about boundary frequency">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label>Boundary Frequency [Bound (hz)]</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about boundary frequency</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Input type="text" className="mt-1" />
             </div>
             <div>
-              <Label className="flex items-center gap-2">
-                End Frequency [End (hz)]
-                <Tooltip content="Info about end frequency">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label>End Frequency [End (hz)]</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about end frequency</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Input type="text" className="mt-1" />
             </div>
           </div>
-
+          
           {/* Resolution Section */}
           <div className="space-y-4">
             <div>
-              <Label className="flex items-center gap-2">
-                Frequency Increment (f1 hz)
-                <Tooltip content="Info about frequency increment">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label>Frequency Increment (f1 hz)</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about frequency increment</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select scale" />
@@ -101,12 +122,19 @@ export function AnalysisForm() {
         <h2 className="text-lg font-semibold mb-4">System Parameters</h2>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <Label className="flex items-center gap-2">
-              Label
-              <Tooltip content="System parameter label info">
-                <InfoIcon className="h-4 w-4 text-gray-400" />
-              </Tooltip>
-            </Label>
+            <div className="flex items-center gap-2">
+              <Label>Label</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>System parameter label info</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="S0.00" />
@@ -118,12 +146,19 @@ export function AnalysisForm() {
             </Select>
           </div>
           <div>
-            <Label className="flex items-center gap-2">
-              Perturbation
-              <Tooltip content="Info about perturbation">
-                <InfoIcon className="h-4 w-4 text-gray-400" />
-              </Tooltip>
-            </Label>
+            <div className="flex items-center gap-2">
+              <Label>Perturbation</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Info about perturbation</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <div className="flex items-center space-x-2 mt-2">
               <Checkbox id="broadband" />
               <label htmlFor="broadband" className="text-sm">
