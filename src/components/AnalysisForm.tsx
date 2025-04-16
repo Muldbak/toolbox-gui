@@ -187,23 +187,39 @@ export function AnalysisForm() {
       <div>
         <h2 className="text-lg font-semibold mb-4">Simulation Parameters</h2>
         <div className="space-y-4">
-          <div>
-            <Label className="flex items-center gap-2">
-              Label
-              <Tooltip content="Simulation parameter label info">
-                <InfoIcon className="h-4 w-4 text-gray-400" />
-              </Tooltip>
-            </Label>
-            <Input type="text" className="mt-1" />
-          </div>
-          <div>
-            <Label className="flex items-center gap-2">
-              Label
-              <Tooltip content="Additional simulation parameter info">
-                <InfoIcon className="h-4 w-4 text-gray-400" />
-              </Tooltip>
-            </Label>
-            <Input type="text" className="mt-1" />
+          <div className="space-y-4">
+            <div>
+              <Label className="flex items-center gap-2">
+                Label
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Simulation parameter label info</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
+              <Input type="text" className="mt-1" />
+            </div>
+            <div>
+              <Label className="flex items-center gap-2">
+                Label
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Additional simulation parameter info</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
+              <Input type="text" className="mt-1" />
+            </div>
           </div>
         </div>
       </div>
