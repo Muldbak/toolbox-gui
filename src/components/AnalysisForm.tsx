@@ -1,9 +1,13 @@
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip } from "@/components/ui/tooltip";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 
 export function AnalysisForm() {
@@ -15,12 +19,19 @@ export function AnalysisForm() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
-              <Label className="flex items-center gap-2">
-                Start Frequency [Start (hz)]
-                <Tooltip content="Info about start frequency">
-                  <InfoIcon className="h-4 w-4 text-gray-400" />
-                </Tooltip>
-              </Label>
+              <div className="flex items-center gap-2">
+                <Label>Start Frequency [Start (hz)]</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Info about start frequency</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Input type="text" className="mt-1" />
             </div>
             <div>
