@@ -1,11 +1,39 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ActionButtons } from "@/components/ActionButtons";
+import StabilityPlots from "./StabilityPlots";
 
 export default function Stability() {
+  const [activeTab, setActiveTab] = useState("measurement");
+
+  return (
+    <div className="flex-1">
+      <div className="flex justify-between items-center p-4 border-b">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList>
+            <TabsTrigger value="measurement">Measurement Settings</TabsTrigger>
+            <TabsTrigger value="plots">Plots</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <ActionButtons />
+      </div>
+      
+      {activeTab === "measurement" ? (
+        <MeasurementSettings />
+      ) : (
+        <StabilityPlots />
+      )}
+    </div>
+  );
+}
+
+function MeasurementSettings() {
   return (
     <div className="flex justify-between p-6 space-x-6">
       {/* Grid Impedance Section */}

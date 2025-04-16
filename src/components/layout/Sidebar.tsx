@@ -1,10 +1,14 @@
 
 import { FileText, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocation, Link } from "react-router-dom";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className }: SidebarProps) {
+  const location = useLocation();
+  const path = location.pathname;
+
   return (
     <div className={cn("w-60 bg-mint-50 border-r min-h-screen p-4", className)}>
       <div className="flex items-center gap-2 mb-8">
@@ -12,21 +16,27 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
       
       <nav className="space-y-2">
-        <a
-          href="#"
-          className="flex items-center gap-2 px-3 py-2 rounded text-mint-700 hover:bg-mint-100"
+        <Link
+          to="/automated-impedance"
+          className={cn(
+            "flex items-center gap-2 px-3 py-2 rounded text-mint-700 hover:bg-mint-100",
+            (path === "/automated-impedance" || path === "/") && "bg-mint-100"
+          )}
         >
           <FileText size={20} />
           <span>Automated Impedance</span>
-        </a>
+        </Link>
         
-        <a 
-          href="#" 
-          className="flex items-center gap-2 px-3 py-2 rounded bg-mint-100 text-mint-700"
+        <Link 
+          to="/stability"
+          className={cn(
+            "flex items-center gap-2 px-3 py-2 rounded text-mint-700 hover:bg-mint-100",
+            path.startsWith("/stability") && "bg-mint-100"
+          )}
         >
           <Activity size={20} />
           <span>Stability</span>
-        </a>
+        </Link>
       </nav>
     </div>
   );
