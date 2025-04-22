@@ -13,8 +13,14 @@ export default function AutomatedImpedance() {
       <div className="flex justify-between items-center p-4 border-b">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList>
-            <TabsTrigger value="analysis">Analysis</TabsTrigger>
-            <TabsTrigger value="pscad">PSCAD Parameters</TabsTrigger>
+            <TabsTrigger value="analysis" className="flex items-center">
+              <span className="text-mint-500 mr-2">•</span>
+              Measurement Settings
+            </TabsTrigger>
+            <TabsTrigger value="pscad" className="flex items-center">
+              <span className="text-mint-500 mr-2">•</span>
+              PSCAD Parameters
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         <ActionButtons />
