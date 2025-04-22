@@ -1,5 +1,5 @@
 
-import { Circuit, Activity } from "lucide-react";
+import { CircuitBoard, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocation, Link } from "react-router-dom";
 
@@ -23,7 +23,7 @@ export function Sidebar({ className }: SidebarProps) {
             (path === "/automated-impedance" || path === "/") && "bg-mint-100"
           )}
         >
-          <Circuit size={20} />
+          <CircuitBoard size={20} />
           <span>Automated Impedance</span>
         </Link>
         
