@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Circle, CheckSquare, XSquare } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -5,16 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-const generateMockData = (offset: number = 0, multiplier: number = 1) => 
+// Generate different mock data for different cases and plot types
+const generateMockData = (caseId: number, plotType: string, offset: number = 0, multiplier: number = 1) => 
   Array.from({ length: 100 }, (_, i) => ({
     frequency: i * 100,
-    magnitude: (25 * Math.sin(i * 0.05) + 25 + offset) * multiplier,
-    phase: (180 * Math.sin(i * 0.05) + offset) * multiplier
+    magnitude: (25 * Math.sin(i * 0.05 + (caseId * 0.2)) + 25 + offset) * multiplier,
+    phase: (180 * Math.sin(i * 0.05 + (caseId * 0.3)) + offset) * multiplier,
+    real: (20 * Math.cos(i * 0.05 + (caseId * 0.4)) + offset) * multiplier,
+    imaginary: (15 * Math.sin(i * 0.05 + (caseId * 0.5)) + offset) * multiplier
   }));
-
-const gridImpedanceData = generateMockData();
-const converterImpedanceData = generateMockData(10, 0.8);
-const nyquistData = generateMockData(-10, 1.2);
 
 type StabilityStatus = "stable" | "marginally-stable" | "unstable";
 
@@ -53,7 +53,7 @@ const getStatusColor = (status: StabilityStatus) => {
 export default function StabilityPlots() {
   const [selectedCases, setSelectedCases] = useState<number[]>([]);
   const [isSISO, setIsSISO] = useState(() => {
-    const stored = localStorage.getItem('isSISO');
+    const stored = localStorage.getItem('plotInSISO');
     return stored ? JSON.parse(stored) : true;
   });
   
@@ -99,28 +99,44 @@ export default function StabilityPlots() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={gridImpedanceData}
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
                   <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`grid-mag-${caseId}`}
+                      data={generateMockData(caseId, 'grid')}
+                      type="monotone" 
+                      dataKey="magnitude" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={gridImpedanceData}
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
                   <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="phase" stroke="#82ca9d" />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`grid-phase-${caseId}`}
+                      data={generateMockData(caseId, 'grid')}
+                      type="monotone" 
+                      dataKey="phase" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -136,14 +152,22 @@ export default function StabilityPlots() {
               <div key={`mimo-grid-${index}`} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={generateMockData(index * 5, 0.8 + index * 0.1)}
-                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="frequency" />
-                    <YAxis />
+                    <XAxis dataKey="frequency" tick={{fontSize: 10}} />
+                    <YAxis tick={{fontSize: 10}} />
                     <Tooltip />
-                    <Line type="monotone" dataKey="magnitude" stroke={`hsl(${index * 45}, 70%, 50%)`} />
+                    {selectedCases.map((caseId) => (
+                      <Line 
+                        key={`grid-mimo-${caseId}-${index}`}
+                        data={generateMockData(caseId, `grid-mimo-${index}`, index * 5, 0.8 + index * 0.1)}
+                        type="monotone" 
+                        dataKey={index % 2 === 0 ? "magnitude" : "phase"} 
+                        stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                        name={`Case ${caseId}`}
+                      />
+                    ))}
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -159,19 +183,51 @@ export default function StabilityPlots() {
       return (
         <div className="border rounded-md shadow-sm p-4">
           <h3 className="font-medium mb-2">Converter Impedance</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={converterImpedanceData}
-                margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
-                <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
-                <Tooltip />
-                <Line type="monotone" dataKey="magnitude" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`converter-mag-${caseId}`}
+                      data={generateMockData(caseId, 'converter', 10, 0.8)}
+                      type="monotone" 
+                      dataKey="magnitude" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`converter-phase-${caseId}`}
+                      data={generateMockData(caseId, 'converter', 10, 0.8)}
+                      type="monotone" 
+                      dataKey="phase" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       );
@@ -184,14 +240,22 @@ export default function StabilityPlots() {
               <div key={`mimo-converter-${index}`} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={generateMockData(index * 5, 0.8 + index * 0.1)}
-                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="frequency" />
-                    <YAxis />
+                    <XAxis dataKey="frequency" tick={{fontSize: 10}} />
+                    <YAxis tick={{fontSize: 10}} />
                     <Tooltip />
-                    <Line type="monotone" dataKey="magnitude" stroke={`hsl(${index * 45}, 70%, 50%)`} />
+                    {selectedCases.map((caseId) => (
+                      <Line 
+                        key={`converter-mimo-${caseId}-${index}`}
+                        data={generateMockData(caseId, `converter-mimo-${index}`, index * 5, 0.8 + index * 0.1)}
+                        type="monotone" 
+                        dataKey={index % 2 === 0 ? "magnitude" : "phase"} 
+                        stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                        name={`Case ${caseId}`}
+                      />
+                    ))}
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -210,23 +274,41 @@ export default function StabilityPlots() {
           <div className="grid grid-cols-2 gap-4">
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={gridImpedanceData}>
+                <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" />
-                  <YAxis />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`bode-mag-${caseId}`}
+                      data={generateMockData(caseId, 'bode', -10, 1.2)}
+                      type="monotone" 
+                      dataKey="magnitude" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={converterImpedanceData}>
+                <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" />
-                  <YAxis />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="magnitude" stroke="#82ca9d" />
+                  {selectedCases.map((caseId) => (
+                    <Line 
+                      key={`bode-phase-${caseId}`}
+                      data={generateMockData(caseId, 'bode', -10, 1.2)}
+                      type="monotone" 
+                      dataKey="phase" 
+                      stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                      name={`Case ${caseId}`}
+                    />
+                  ))}
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -237,12 +319,21 @@ export default function StabilityPlots() {
           <h3 className="font-medium mb-2">Nyquist Plot</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={nyquistData}>
+              <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={['auto', 'auto']} />
-                <YAxis domain={['auto', 'auto']} />
+                <XAxis type="number" dataKey="real" domain={['auto', 'auto']} label={{ value: 'Real', position: 'insideBottom', offset: -5 }} />
+                <YAxis type="number" dataKey="imaginary" domain={['auto', 'auto']} label={{ value: 'Imaginary', angle: -90, position: 'insideLeft' }} />
                 <Tooltip />
-                <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+                {selectedCases.map((caseId) => (
+                  <Line 
+                    key={`nyquist-${caseId}`}
+                    data={generateMockData(caseId, 'nyquist', -5, 1.5)}
+                    type="monotone" 
+                    dataKey="imaginary" 
+                    stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
+                    name={`Case ${caseId}`}
+                  />
+                ))}
               </LineChart>
             </ResponsiveContainer>
           </div>

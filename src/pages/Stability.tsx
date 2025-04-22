@@ -34,6 +34,17 @@ export default function Stability() {
 }
 
 function MeasurementSettings() {
+  const [plotInSISO, setPlotInSISO] = useState(() => {
+    const stored = localStorage.getItem('plotInSISO');
+    return stored ? JSON.parse(stored) : true;
+  });
+
+  const handleSISOChange = (value: string) => {
+    const isSISO = value === "yes";
+    setPlotInSISO(isSISO);
+    localStorage.setItem('plotInSISO', JSON.stringify(isSISO));
+  };
+
   return (
     <div className="flex justify-between p-6 space-x-6">
       {/* Grid Impedance Section */}
@@ -141,7 +152,11 @@ function MeasurementSettings() {
 
           <div className="space-y-2">
             <Label className="block">Plot in SISO Model</Label>
-            <RadioGroup defaultValue="no" className="flex gap-4">
+            <RadioGroup 
+              value={plotInSISO ? "yes" : "no"} 
+              onValueChange={handleSISOChange}
+              className="flex gap-4"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="siso-yes" />
                 <Label htmlFor="siso-yes">Yes</Label>

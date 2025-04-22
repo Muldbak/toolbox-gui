@@ -1,182 +1,176 @@
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { InfoIcon } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Toggle } from "@/components/ui/toggle";
 
 export function AnalysisForm() {
+  const [outputFormat, setOutputFormat] = useState("tabular");
+  const [sweepUnits, setSweepUnits] = useState("Hz");
+  const [impedanceInAmplitude, setImpedanceInAmplitude] = useState(true);
+
   return (
-    <div className="grid grid-cols-3 gap-6 p-6">
-      {/* Frequency Range Section */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold mb-4">Frequency Range</h2>
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>Start Frequency [Start (hz)]</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about start frequency</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+    <div className="p-6">
+      <div className="grid grid-cols-3 gap-8">
+        {/* Column 1: Sweep Settings */}
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Sweep Settings</h2>
+          
+          <div className="space-y-2">
+            <Label>Start Sweep</Label>
+            <div className="flex gap-2">
+              <Input type="number" placeholder="0" className="flex-1" />
+              <Select value={sweepUnits} onValueChange={setSweepUnits}>
+                <SelectTrigger className="w-24">
+                  <SelectValue placeholder="Hz" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Hz">Hz</SelectItem>
+                  <SelectItem value="kHz">kHz</SelectItem>
+                  <SelectItem value="MHz">MHz</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Input type="text" className="mt-1" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>Boundary Frequency [Bound (hz)]</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about boundary frequency</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+          
+          <div className="space-y-2">
+            <Label>End Sweep</Label>
+            <div className="flex gap-2">
+              <Input type="number" placeholder="1000" className="flex-1" />
+              <Select value={sweepUnits} onValueChange={setSweepUnits}>
+                <SelectTrigger className="w-24">
+                  <SelectValue placeholder="Hz" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Hz">Hz</SelectItem>
+                  <SelectItem value="kHz">kHz</SelectItem>
+                  <SelectItem value="MHz">MHz</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Input type="text" className="mt-1" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>End Frequency [End (hz)]</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about end frequency</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <Input type="text" className="mt-1" />
+          
+          <div className="space-y-2">
+            <Label>Number of Points</Label>
+            <Input type="number" placeholder="100" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Scale Type</Label>
+            <RadioGroup defaultValue="log" className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="log" id="scale-log" />
+                <Label htmlFor="scale-log">Logarithmic</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="linear" id="scale-linear" />
+                <Label htmlFor="scale-linear">Linear</Label>
+              </div>
+            </RadioGroup>
           </div>
         </div>
-      </div>
-
-      {/* Resolution Section */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold mb-4">Resolution</h2>
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>Frequency Increment (f1 hz)</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about frequency increment</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <Select>
+        
+        {/* Column 2: Injection Settings */}
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Injection Settings</h2>
+          
+          <div className="space-y-2">
+            <Label>Injection Type</Label>
+            <Select defaultValue="current">
               <SelectTrigger>
-                <SelectValue placeholder="Select scale" />
+                <SelectValue placeholder="Select Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="scale1">Scale 1</SelectItem>
-                <SelectItem value="scale2">Scale 2</SelectItem>
-                <SelectItem value="scale3">Scale 3</SelectItem>
+                <SelectItem value="current">Current</SelectItem>
+                <SelectItem value="voltage">Voltage</SelectItem>
+                <SelectItem value="both">Both</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <Label className="flex items-center gap-2">
-              Frequency Step 1 (step1 hz)
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about frequency step 1</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </Label>
-            <Input type="text" className="mt-1" />
+          
+          <div className="space-y-2">
+            <Label>Injection Amplitude</Label>
+            <Input type="number" placeholder="0.1" />
           </div>
-          <div>
-            <Label className="flex items-center gap-2">
-              Frequency Step 2 (step2 hz)
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about frequency step 2</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </Label>
-            <Input type="text" className="mt-1" />
-          </div>
-        </div>
-      </div>
-
-      {/* System Parameters Section */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold mb-4">System Parameters</h2>
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>Label</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>System parameter label info</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <Select>
+          
+          <div className="space-y-2">
+            <Label>Injection Point</Label>
+            <Select defaultValue="pcc">
               <SelectTrigger>
-                <SelectValue placeholder="S0.00" />
+                <SelectValue placeholder="Select Point" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="s0">S0.00</SelectItem>
-                <SelectItem value="s1">S1.00</SelectItem>
+                <SelectItem value="pcc">PCC</SelectItem>
+                <SelectItem value="terminal">Terminal</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <Label>Perturbation</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Info about perturbation</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+          
+          <div className="space-y-2">
+            <Label>Stabilization Time (ms)</Label>
+            <Input type="number" placeholder="500" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Measurement Time (ms)</Label>
+            <Input type="number" placeholder="200" />
+          </div>
+        </div>
+        
+        {/* Column 3: Output Settings */}
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Output Settings</h2>
+          
+          <div className="space-y-2">
+            <Label>Output Format</Label>
+            <RadioGroup value={outputFormat} onValueChange={setOutputFormat} className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="tabular" id="format-tabular" />
+                <Label htmlFor="format-tabular">Tabular</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="graph" id="format-graph" />
+                <Label htmlFor="format-graph">Graph</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Impedance Format</Label>
+            <div className="flex gap-2">
+              <Toggle 
+                pressed={impedanceInAmplitude} 
+                onPressedChange={setImpedanceInAmplitude}
+                className="data-[state=on]:bg-mint-100"
+              >
+                Amplitude/Phase
+              </Toggle>
+              <Toggle 
+                pressed={!impedanceInAmplitude} 
+                onPressedChange={(pressed) => setImpedanceInAmplitude(!pressed)}
+                className="data-[state=on]:bg-mint-100"
+              >
+                Real/Imaginary
+              </Toggle>
             </div>
-            <div className="flex items-center space-x-2 mt-2">
-              <Checkbox id="broadband" />
-              <label htmlFor="broadband" className="text-sm">
-                Broadband perturbation injection
-              </label>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Export Path</Label>
+            <div className="flex gap-2">
+              <Input placeholder="/path/to/export" className="flex-1" />
+              <Button variant="outline">Browse</Button>
             </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Notes</Label>
+            <Textarea placeholder="Add any notes about this analysis..." className="h-20" />
           </div>
         </div>
       </div>
