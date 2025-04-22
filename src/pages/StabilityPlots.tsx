@@ -6,15 +6,27 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-// Generate different mock data for different cases and plot types
-const generateMockData = (caseId: number, plotType: string, offset: number = 0, multiplier: number = 1) => 
-  Array.from({ length: 100 }, (_, i) => ({
-    frequency: i * 100,
-    magnitude: (25 * Math.sin(i * 0.05 + (caseId * 0.2)) + 25 + offset) * multiplier,
-    phase: (180 * Math.sin(i * 0.05 + (caseId * 0.3)) + offset) * multiplier,
-    real: (20 * Math.cos(i * 0.05 + (caseId * 0.4)) + offset) * multiplier,
-    imaginary: (15 * Math.sin(i * 0.05 + (caseId * 0.5)) + offset) * multiplier
-  }));
+// Generate better mock data for different cases and plot types
+const generateMockData = (caseId: number, plotType: string, offset: number = 0, multiplier: number = 1) => {
+  // Create full frequency range from 0 to 10000 Hz
+  return Array.from({ length: 50 }, (_, i) => {
+    const frequency = i * 200; // Spread points across full x-axis (0-10000 Hz)
+    
+    // Create different patterns for different case IDs and plot types
+    const magnitude = (25 * Math.sin(i * 0.1 + (caseId * 0.3)) + 25 + offset) * multiplier;
+    const phase = (180 * Math.sin(i * 0.1 + (caseId * 0.5)) + offset) * multiplier;
+    const real = (20 * Math.cos(i * 0.1 + (caseId * 0.7)) + offset) * multiplier;
+    const imaginary = (15 * Math.sin(i * 0.1 + (caseId * 0.9)) + offset) * multiplier;
+    
+    return {
+      frequency,
+      magnitude,
+      phase,
+      real,
+      imaginary
+    };
+  });
+};
 
 type StabilityStatus = "stable" | "marginally-stable" | "unstable";
 
@@ -102,7 +114,12 @@ export default function StabilityPlots() {
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -113,6 +130,7 @@ export default function StabilityPlots() {
                       dataKey="magnitude" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -124,7 +142,12 @@ export default function StabilityPlots() {
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -135,6 +158,7 @@ export default function StabilityPlots() {
                       dataKey="phase" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -155,7 +179,12 @@ export default function StabilityPlots() {
                     margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="frequency" tick={{fontSize: 10}} />
+                    <XAxis 
+                      dataKey="frequency" 
+                      type="number"
+                      domain={[0, 10000]}
+                      tick={{fontSize: 10}} 
+                    />
                     <YAxis tick={{fontSize: 10}} />
                     <Tooltip />
                     {selectedCases.map((caseId) => (
@@ -166,6 +195,7 @@ export default function StabilityPlots() {
                         dataKey={index % 2 === 0 ? "magnitude" : "phase"} 
                         stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                         name={`Case ${caseId}`}
+                        dot={false}
                       />
                     ))}
                   </LineChart>
@@ -190,7 +220,12 @@ export default function StabilityPlots() {
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -201,6 +236,7 @@ export default function StabilityPlots() {
                       dataKey="magnitude" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -212,7 +248,12 @@ export default function StabilityPlots() {
                   margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -223,6 +264,7 @@ export default function StabilityPlots() {
                       dataKey="phase" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -243,7 +285,12 @@ export default function StabilityPlots() {
                     margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="frequency" tick={{fontSize: 10}} />
+                    <XAxis 
+                      dataKey="frequency" 
+                      type="number"
+                      domain={[0, 10000]}
+                      tick={{fontSize: 10}} 
+                    />
                     <YAxis tick={{fontSize: 10}} />
                     <Tooltip />
                     {selectedCases.map((caseId) => (
@@ -254,6 +301,7 @@ export default function StabilityPlots() {
                         dataKey={index % 2 === 0 ? "magnitude" : "phase"} 
                         stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                         name={`Case ${caseId}`}
+                        dot={false}
                       />
                     ))}
                   </LineChart>
@@ -276,7 +324,12 @@ export default function StabilityPlots() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -287,6 +340,7 @@ export default function StabilityPlots() {
                       dataKey="magnitude" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -296,7 +350,12 @@ export default function StabilityPlots() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="frequency" 
+                    type="number"
+                    domain={[0, 10000]}
+                    label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} 
+                  />
                   <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   {selectedCases.map((caseId) => (
@@ -307,6 +366,7 @@ export default function StabilityPlots() {
                       dataKey="phase" 
                       stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                       name={`Case ${caseId}`}
+                      dot={false}
                     />
                   ))}
                 </LineChart>
@@ -321,7 +381,12 @@ export default function StabilityPlots() {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="real" domain={['auto', 'auto']} label={{ value: 'Real', position: 'insideBottom', offset: -5 }} />
+                <XAxis 
+                  type="number" 
+                  dataKey="real" 
+                  domain={['auto', 'auto']} 
+                  label={{ value: 'Real', position: 'insideBottom', offset: -5 }} 
+                />
                 <YAxis type="number" dataKey="imaginary" domain={['auto', 'auto']} label={{ value: 'Imaginary', angle: -90, position: 'insideLeft' }} />
                 <Tooltip />
                 {selectedCases.map((caseId) => (
@@ -332,6 +397,7 @@ export default function StabilityPlots() {
                     dataKey="imaginary" 
                     stroke={`hsl(${caseId * 36}, 70%, 50%)`} 
                     name={`Case ${caseId}`}
+                    dot={false}
                   />
                 ))}
               </LineChart>
