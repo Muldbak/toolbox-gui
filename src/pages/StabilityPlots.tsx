@@ -1,31 +1,21 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Circle, CheckSquare, XSquare } from "lucide-react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { ChartContainer } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-// Mock data for plots
-const gridImpedanceData = Array.from({ length: 100 }, (_, i) => ({
-  frequency: i * 100,
-  magnitude: 25 * Math.sin(i * 0.05) + 25,
-}));
+const generateMockData = (offset: number = 0, multiplier: number = 1) => 
+  Array.from({ length: 100 }, (_, i) => ({
+    frequency: i * 100,
+    magnitude: (25 * Math.sin(i * 0.05) + 25 + offset) * multiplier,
+    phase: (180 * Math.sin(i * 0.05) + offset) * multiplier
+  }));
 
-const converterImpedanceData = Array.from({ length: 100 }, (_, i) => ({
-  frequency: i * 100,
-  magnitude: 15 * Math.cos(i * 0.05) + 15,
-}));
+const gridImpedanceData = generateMockData();
+const converterImpedanceData = generateMockData(10, 0.8);
+const nyquistData = generateMockData(-10, 1.2);
 
-// Mock cases data
 type StabilityStatus = "stable" | "marginally-stable" | "unstable";
 
 interface Case {
@@ -47,7 +37,6 @@ const MOCK_CASES: Case[] = [
   { id: 10, name: "Case 10", status: "marginally-stable" },
 ];
 
-// Get status color
 const getStatusColor = (status: StabilityStatus) => {
   switch (status) {
     case "stable":
@@ -63,8 +52,18 @@ const getStatusColor = (status: StabilityStatus) => {
 
 export default function StabilityPlots() {
   const [selectedCases, setSelectedCases] = useState<number[]>([]);
+  const [isSISO, setIsSISO] = useState(() => {
+    const stored = localStorage.getItem('isSISO');
+    return stored ? JSON.parse(stored) : true;
+  });
   
-  // Select/deselect all cases
+  useEffect(() => {
+    const storedSISO = localStorage.getItem('plotInSISO');
+    if (storedSISO) {
+      setIsSISO(JSON.parse(storedSISO));
+    }
+  }, []);
+
   const handleSelectAll = () => {
     if (selectedCases.length === MOCK_CASES.length) {
       setSelectedCases([]);
@@ -73,7 +72,6 @@ export default function StabilityPlots() {
     }
   };
   
-  // Select cases by status
   const handleSelectByStatus = (status: StabilityStatus) => {
     const casesByStatus = MOCK_CASES.filter(c => c.status === status).map(c => c.id);
     setSelectedCases(prev => {
@@ -86,17 +84,176 @@ export default function StabilityPlots() {
     });
   };
   
-  // Toggle single case selection
   const toggleCase = (id: number) => {
     setSelectedCases(prev => 
       prev.includes(id) ? prev.filter(caseId => caseId !== id) : [...prev, id]
     );
   };
 
+  const renderGridImpedance = () => {
+    if (isSISO) {
+      return (
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Grid Impedance</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={gridImpedanceData}
+                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={gridImpedanceData}
+                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Phase (deg)', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="phase" stroke="#82ca9d" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Grid Impedance (MIMO)</h3>
+          <div className="grid grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div key={`mimo-grid-${index}`} className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={generateMockData(index * 5, 0.8 + index * 0.1)}
+                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="frequency" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="magnitude" stroke={`hsl(${index * 45}, 70%, 50%)`} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const renderConverterImpedance = () => {
+    if (isSISO) {
+      return (
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Converter Impedance</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={converterImpedanceData}
+                margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="frequency" label={{ value: 'Frequency (Hz)', position: 'insideBottom', offset: -5 }} />
+                <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Line type="monotone" dataKey="magnitude" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Converter Impedance (MIMO)</h3>
+          <div className="grid grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div key={`mimo-converter-${index}`} className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={generateMockData(index * 5, 0.8 + index * 0.1)}
+                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="frequency" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="magnitude" stroke={`hsl(${index * 45}, 70%, 50%)`} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const renderStabilityPlots = () => {
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Bode Plot</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={gridImpedanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={converterImpedanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="frequency" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="magnitude" stroke="#82ca9d" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+        
+        <div className="border rounded-md shadow-sm p-4">
+          <h3 className="font-medium mb-2">Nyquist Plot</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={nyquistData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" domain={['auto', 'auto']} />
+                <YAxis domain={['auto', 'auto']} />
+                <Tooltip />
+                <Line type="monotone" dataKey="magnitude" stroke="#8884d8" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="p-6">
       <div className="flex gap-6">
-        {/* Left side: Cases table */}
         <div className="w-1/4 border rounded-md shadow-sm">
           <div className="p-3 bg-gray-50 border-b flex justify-between items-center">
             <h3 className="font-medium">Cases</h3>
@@ -110,33 +267,18 @@ export default function StabilityPlots() {
               >
                 <CheckSquare size={16} />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => handleSelectByStatus("stable")}
-                title="Select/Deselect Stable Cases" 
-                className="h-8 w-8 p-0"
-              >
-                <Circle className="text-green-500" size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => handleSelectByStatus("marginally-stable")}
-                title="Select/Deselect Marginally Stable Cases" 
-                className="h-8 w-8 p-0"
-              >
-                <Circle className="text-yellow-500" size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => handleSelectByStatus("unstable")}
-                title="Select/Deselect Unstable Cases" 
-                className="h-8 w-8 p-0"
-              >
-                <Circle className="text-red-500" size={16} />
-              </Button>
+              {["stable", "marginally-stable", "unstable"].map((status) => (
+                <Button 
+                  key={status}
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => handleSelectByStatus(status as StabilityStatus)}
+                  title={`Select/Deselect ${status} Cases`}
+                  className="h-8 w-8 p-0"
+                >
+                  <Circle className={getStatusColor(status as StabilityStatus)} size={16} />
+                </Button>
+              ))}
             </div>
           </div>
           
@@ -169,64 +311,10 @@ export default function StabilityPlots() {
           </div>
         </div>
         
-        {/* Right side: Plots */}
-        <div className="w-3/4 grid grid-cols-2 gap-4">
-          {/* Grid Impedance Plot */}
-          <div className="border rounded-md shadow-sm p-4">
-            <h3 className="font-medium mb-2">Grid impedance</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={gridImpedanceData}
-                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'frequency (Hz)', position: 'insideBottom', offset: -5 }} />
-                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="magnitude" stroke="#8884d8" activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Converter Impedance Plot */}
-          <div className="border rounded-md shadow-sm p-4">
-            <h3 className="font-medium mb-2">Converter impedance</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={converterImpedanceData}
-                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="frequency" label={{ value: 'frequency (Hz)', position: 'insideBottom', offset: -5 }} />
-                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="magnitude" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Bode Plot */}
-          <div className="border rounded-md shadow-sm p-4 col-span-2">
-            <h3 className="font-medium mb-2">Bode Plot: System is unstable in the studied frequency range!</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" domain={['auto', 'auto']} label={{ value: 'Frequency', position: 'insideBottom', offset: -5 }} />
-                  <YAxis label={{ value: 'Magnitude (dB)', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip />
-                  <Line data={gridImpedanceData} type="monotone" dataKey="magnitude" name="Eigenvalue 1" stroke="#8884d8" />
-                  <Line data={converterImpedanceData} type="monotone" dataKey="magnitude" name="Eigenvalue 2" stroke="#82ca9d" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+        <div className="w-3/4 space-y-4">
+          {renderGridImpedance()}
+          {renderConverterImpedance()}
+          {renderStabilityPlots()}
         </div>
       </div>
     </div>
