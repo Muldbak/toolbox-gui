@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, FileInput, Upload } from "lucide-react";
 import { ActionButtons } from "@/components/ActionButtons";
 import StabilityPlots from "./StabilityPlots";
 
@@ -40,11 +40,25 @@ function MeasurementSettings() {
     const stored = localStorage.getItem('plotInSISO');
     return stored ? JSON.parse(stored) : true;
   });
+  const [gridImpedanceFile, setGridImpedanceFile] = useState<File | null>(null);
+  const [converterImpedanceFile, setConverterImpedanceFile] = useState<File | null>(null);
 
   const handleSISOChange = (value: string) => {
     const isSISO = value === "yes";
     setPlotInSISO(isSISO);
     localStorage.setItem('plotInSISO', JSON.stringify(isSISO));
+  };
+
+  const handleGridFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setGridImpedanceFile(e.target.files[0]);
+    }
+  };
+
+  const handleConverterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setConverterImpedanceFile(e.target.files[0]);
+    }
   };
 
   return (
@@ -66,20 +80,38 @@ function MeasurementSettings() {
         </h2>
         <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2">
-              <Input placeholder="Enter grid impedance" />
+            <div className="flex items-center gap-2 mb-2">
+              <Label className="block">Upload Grid Impedance File</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
                     <InfoIcon className="h-4 w-4 text-gray-400" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Input the grid impedance value or browse for a file</p>
+                    <p>Upload a file with grid impedance data</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Button variant="secondary" className="w-full mt-2">Browse</Button>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
+                {gridImpedanceFile ? gridImpedanceFile.name : "No file selected"}
+              </div>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="grid-impedance-file"
+                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
+                  onChange={handleGridFileChange}
+                  accept=".csv,.txt,.xlsx"
+                />
+                <Button variant="outline" className="relative z-10 flex items-center gap-2">
+                  <FileInput className="h-4 w-4" />
+                  Browse
+                </Button>
+              </div>
+            </div>
           </div>
           
           <div className="space-y-2">
@@ -153,20 +185,38 @@ function MeasurementSettings() {
         </h2>
         <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2">
-              <Input placeholder="Enter converter impedance" />
+            <div className="flex items-center gap-2 mb-2">
+              <Label className="block">Upload Converter Impedance File</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
                     <InfoIcon className="h-4 w-4 text-gray-400" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Input the converter impedance value or browse for a file</p>
+                    <p>Upload a file with converter impedance data</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Button variant="secondary" className="w-full mt-2">Browse</Button>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
+                {converterImpedanceFile ? converterImpedanceFile.name : "No file selected"}
+              </div>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="converter-impedance-file"
+                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
+                  onChange={handleConverterFileChange}
+                  accept=".csv,.txt,.xlsx"
+                />
+                <Button variant="outline" className="relative z-10 flex items-center gap-2">
+                  <FileInput className="h-4 w-4" />
+                  Browse
+                </Button>
+              </div>
+            </div>
           </div>
           
           <div className="space-y-2">
