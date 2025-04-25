@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { InfoIcon } from "lucide-react";
 import { ActionButtons } from "@/components/ActionButtons";
 import StabilityPlots from "./StabilityPlots";
 
@@ -49,13 +51,51 @@ function MeasurementSettings() {
     <div className="flex justify-between p-6 space-x-6">
       {/* Grid Impedance Section */}
       <div className="flex-1">
-        <h2 className="text-lg font-semibold mb-4">Grid Impedance</h2>
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          Grid Impedance
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon className="h-4 w-4 text-gray-400" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Configure grid impedance parameters for stability analysis</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </h2>
         <div className="space-y-4">
-          <Input placeholder="Enter grid impedance" />
-          <Button variant="secondary" className="w-full">Browse</Button>
+          <div>
+            <div className="flex items-center gap-2">
+              <Input placeholder="Enter grid impedance" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Input the grid impedance value or browse for a file</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <Button variant="secondary" className="w-full mt-2">Browse</Button>
+          </div>
           
           <div className="space-y-2">
-            <Label className="block">dB Input</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">dB Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Toggle whether the input values are in decibels</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup defaultValue="no" className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="grid-db-yes" />
@@ -69,7 +109,19 @@ function MeasurementSettings() {
           </div>
 
           <div className="space-y-2">
-            <Label className="block">Admittance Input</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">Admittance Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Specify if the input values are in admittance format</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup defaultValue="yes" className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="grid-admittance-yes" />
@@ -86,13 +138,51 @@ function MeasurementSettings() {
 
       {/* Converter Impedance Section */}
       <div className="flex-1">
-        <h2 className="text-lg font-semibold mb-4">Converter Impedance</h2>
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          Converter Impedance
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon className="h-4 w-4 text-gray-400" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Configure converter impedance parameters for stability analysis</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </h2>
         <div className="space-y-4">
-          <Input placeholder="Enter converter impedance" />
-          <Button variant="secondary" className="w-full">Browse</Button>
+          <div>
+            <div className="flex items-center gap-2">
+              <Input placeholder="Enter converter impedance" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Input the converter impedance value or browse for a file</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <Button variant="secondary" className="w-full mt-2">Browse</Button>
+          </div>
           
           <div className="space-y-2">
-            <Label className="block">dB Input</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">dB Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Toggle whether the input values are in decibels</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup defaultValue="yes" className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="conv-db-yes" />
@@ -106,7 +196,19 @@ function MeasurementSettings() {
           </div>
 
           <div className="space-y-2">
-            <Label className="block">Admittance Input</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">Admittance Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Specify if the input values are in admittance format</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup defaultValue="yes" className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="conv-admittance-yes" />
@@ -123,21 +225,59 @@ function MeasurementSettings() {
 
       {/* Impedance Plot Section */}
       <div className="flex-1">
-        <h2 className="text-lg font-semibold mb-4">Impedance Plot</h2>
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          Impedance Plot
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon className="h-4 w-4 text-gray-400" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Configure how the impedance values should be plotted</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </h2>
         <div className="space-y-4">
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="option1">Option 1</SelectItem>
-              <SelectItem value="option2">Option 2</SelectItem>
-              <SelectItem value="option3">Option 3</SelectItem>
-            </SelectContent>
-          </Select>
+          <div>
+            <div className="flex items-center gap-2">
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="option1">Option 1</SelectItem>
+                  <SelectItem value="option2">Option 2</SelectItem>
+                  <SelectItem value="option3">Option 3</SelectItem>
+                </SelectContent>
+              </Select>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Choose the plot visualization option</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
 
           <div className="space-y-2">
-            <Label className="block">dB Input</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">dB Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Toggle whether the plot values are in decibels</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup defaultValue="yes" className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="plot-db-yes" />
@@ -151,7 +291,19 @@ function MeasurementSettings() {
           </div>
 
           <div className="space-y-2">
-            <Label className="block">Plot in SISO Model</Label>
+            <div className="flex items-center gap-2">
+              <Label className="block">Plot in SISO Model</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Toggle between SISO (Single Input Single Output) and MIMO model visualization</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <RadioGroup 
               value={plotInSISO ? "yes" : "no"} 
               onValueChange={handleSISOChange}
