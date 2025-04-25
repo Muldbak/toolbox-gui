@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function PscadParameters() {
   const [numToolboxes, setNumToolboxes] = useState("1");
@@ -180,15 +182,42 @@ export function PscadParameters() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            {Array.from({ length: parseInt(numProjects) }, (_, index) => (
-              <Input 
-                key={`project-${index}`} 
-                type="text" 
-                placeholder={`Project ${index + 1}`} 
-                className="mt-1 mb-3" 
-              />
-            ))}
+            <ScrollArea className="h-[200px] w-full rounded-md border">
+              <div className="p-4">
+                {Array.from({ length: parseInt(numProjects) }, (_, index) => (
+                  <Input 
+                    key={`project-${index}`} 
+                    type="text" 
+                    placeholder={`Project ${index + 1}`} 
+                    className="mt-1 mb-3" 
+                  />
+                ))}
+              </div>
+            </ScrollArea>
           </div>
+
+          {parseInt(numProjects) > 1 && (
+            <div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium">Simulation Set</label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enter simulation set details</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Input 
+                type="text" 
+                placeholder="Enter simulation set" 
+                className="mt-1" 
+              />
+            </div>
+          )}
         </div>
       </section>
 
