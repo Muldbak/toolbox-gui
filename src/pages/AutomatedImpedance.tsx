@@ -14,11 +14,9 @@ export default function AutomatedImpedance() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList>
             <TabsTrigger value="analysis" className="flex items-center">
-              <span className="text-mint-500 mr-2">•</span>
               Measurement Settings
             </TabsTrigger>
             <TabsTrigger value="pscad" className="flex items-center">
-              <span className="text-mint-500 mr-2">•</span>
               PSCAD Parameters
             </TabsTrigger>
           </TabsList>
