@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,6 +77,47 @@ function MeasurementSettings() {
             </Tooltip>
           </TooltipProvider>
         </h2>
+        
+        {/* Stability Evaluation Section */}
+        <div className="mb-6">
+          <h3 className="text-base font-semibold mb-3">Stability Evaluation</h3>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Label>Required gain margin (dB)</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Specify the required gain margin in decibels for stability evaluation</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Input type="number" defaultValue="0" className="w-full max-w-[250px]" />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Label>Required phase margin (deg)</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Specify the required phase margin in degrees for stability evaluation</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Input type="number" defaultValue="0" className="w-full max-w-[250px]" />
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
