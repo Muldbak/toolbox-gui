@@ -9,12 +9,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { InfoIcon, FileInput, Upload } from "lucide-react";
 import { ActionButtons } from "@/components/ActionButtons";
 import StabilityPlots from "./StabilityPlots";
-
 export default function Stability() {
   const [activeTab, setActiveTab] = useState("measurement");
-
-  return (
-    <div className="flex-1">
+  return <div className="flex-1">
       <div className="flex justify-between items-center p-4 border-b">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList>
@@ -25,15 +22,9 @@ export default function Stability() {
         <ActionButtons />
       </div>
       
-      {activeTab === "measurement" ? (
-        <MeasurementSettings />
-      ) : (
-        <StabilityPlots />
-      )}
-    </div>
-  );
+      {activeTab === "measurement" ? <MeasurementSettings /> : <StabilityPlots />}
+    </div>;
 }
-
 function MeasurementSettings() {
   const [plotInSISO, setPlotInSISO] = useState(() => {
     const stored = localStorage.getItem('plotInSISO');
@@ -41,27 +32,22 @@ function MeasurementSettings() {
   });
   const [gridImpedanceFile, setGridImpedanceFile] = useState<File | null>(null);
   const [converterImpedanceFile, setConverterImpedanceFile] = useState<File | null>(null);
-
   const handleSISOChange = (value: string) => {
     const isSISO = value === "yes";
     setPlotInSISO(isSISO);
     localStorage.setItem('plotInSISO', JSON.stringify(isSISO));
   };
-
   const handleGridFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setGridImpedanceFile(e.target.files[0]);
     }
   };
-
   const handleConverterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setConverterImpedanceFile(e.target.files[0]);
     }
   };
-
-  return (
-    <div className="flex justify-between p-6 space-x-6">
+  return <div className="flex justify-between p-6 space-x-6">
       {/* Grid Impedance Section */}
       <div className="flex-1">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -81,32 +67,14 @@ function MeasurementSettings() {
         <div className="space-y-4">
           {/* Upload Grid Impedance File */}
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="block">Upload Grid Impedance File</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Upload a file with grid impedance data</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            
             
             <div className="flex items-center gap-2">
               <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
                 {gridImpedanceFile ? gridImpedanceFile.name : "No file selected"}
               </div>
               <div className="relative">
-                <input
-                  type="file"
-                  id="grid-impedance-file"
-                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
-                  onChange={handleGridFileChange}
-                  accept=".csv,.txt,.xlsx"
-                />
+                <input type="file" id="grid-impedance-file" className="absolute inset-0 opacity-0 w-full cursor-pointer" onChange={handleGridFileChange} accept=".csv,.txt,.xlsx" />
                 <Button variant="outline" className="relative z-10 flex items-center gap-2">
                   <FileInput className="h-4 w-4" />
                   Browse
@@ -228,32 +196,14 @@ function MeasurementSettings() {
         </h2>
         <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="block">Upload Converter Impedance File</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Upload a file with converter impedance data</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            
             
             <div className="flex items-center gap-2">
               <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
                 {converterImpedanceFile ? converterImpedanceFile.name : "No file selected"}
               </div>
               <div className="relative">
-                <input
-                  type="file"
-                  id="converter-impedance-file"
-                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
-                  onChange={handleConverterFileChange}
-                  accept=".csv,.txt,.xlsx"
-                />
+                <input type="file" id="converter-impedance-file" className="absolute inset-0 opacity-0 w-full cursor-pointer" onChange={handleConverterFileChange} accept=".csv,.txt,.xlsx" />
                 <Button variant="outline" className="relative z-10 flex items-center gap-2">
                   <FileInput className="h-4 w-4" />
                   Browse
@@ -397,11 +347,7 @@ function MeasurementSettings() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <RadioGroup 
-              value={plotInSISO ? "yes" : "no"} 
-              onValueChange={handleSISOChange}
-              className="flex gap-4"
-            >
+            <RadioGroup value={plotInSISO ? "yes" : "no"} onValueChange={handleSISOChange} className="flex gap-4">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="siso-yes" />
                 <Label htmlFor="siso-yes">Yes</Label>
@@ -414,6 +360,5 @@ function MeasurementSettings() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
