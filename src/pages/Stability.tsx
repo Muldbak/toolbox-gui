@@ -77,9 +77,101 @@ function MeasurementSettings() {
             </Tooltip>
           </TooltipProvider>
         </h2>
-        
+
+        <div className="space-y-4">
+          {/* Upload Grid Impedance File */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Label className="block">Upload Grid Impedance File</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Upload a file with grid impedance data</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
+                {gridImpedanceFile ? gridImpedanceFile.name : "No file selected"}
+              </div>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="grid-impedance-file"
+                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
+                  onChange={handleGridFileChange}
+                  accept=".csv,.txt,.xlsx"
+                />
+                <Button variant="outline" className="relative z-10 flex items-center gap-2">
+                  <FileInput className="h-4 w-4" />
+                  Browse
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* dB Input */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Label className="block">dB Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Toggle whether the input values are in decibels</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <RadioGroup defaultValue="no" className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="grid-db-yes" />
+                <Label htmlFor="grid-db-yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="grid-db-no" />
+                <Label htmlFor="grid-db-no">No</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Admittance Input */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Label className="block">Admittance Input</Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Specify if the input values are in admittance format</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <RadioGroup defaultValue="yes" className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="grid-admittance-yes" />
+                <Label htmlFor="grid-admittance-yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="grid-admittance-no" />
+                <Label htmlFor="grid-admittance-no">No</Label>
+              </div>
+            </RadioGroup>
+          </div>
+        </div>
+
         {/* Stability Evaluation Section */}
-        <div className="mb-6">
+        <div className="mt-8">
           <h3 className="text-base font-semibold mb-3">Stability Evaluation</h3>
           <div className="space-y-3">
             <div className="space-y-2">
@@ -115,95 +207,6 @@ function MeasurementSettings() {
               </div>
               <Input type="number" defaultValue="0" className="w-full max-w-[250px]" />
             </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="block">Upload Grid Impedance File</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Upload a file with grid impedance data</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <div className="flex-1 border rounded-md p-2 bg-background text-sm truncate">
-                {gridImpedanceFile ? gridImpedanceFile.name : "No file selected"}
-              </div>
-              <div className="relative">
-                <input
-                  type="file"
-                  id="grid-impedance-file"
-                  className="absolute inset-0 opacity-0 w-full cursor-pointer"
-                  onChange={handleGridFileChange}
-                  accept=".csv,.txt,.xlsx"
-                />
-                <Button variant="outline" className="relative z-10 flex items-center gap-2">
-                  <FileInput className="h-4 w-4" />
-                  Browse
-                </Button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label className="block">dB Input</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Toggle whether the input values are in decibels</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <RadioGroup defaultValue="no" className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="grid-db-yes" />
-                <Label htmlFor="grid-db-yes">Yes</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="grid-db-no" />
-                <Label htmlFor="grid-db-no">No</Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label className="block">Admittance Input</Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-4 w-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Specify if the input values are in admittance format</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <RadioGroup defaultValue="yes" className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="grid-admittance-yes" />
-                <Label htmlFor="grid-admittance-yes">Yes</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="grid-admittance-no" />
-                <Label htmlFor="grid-admittance-no">No</Label>
-              </div>
-            </RadioGroup>
           </div>
         </div>
       </div>
