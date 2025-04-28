@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -268,29 +267,6 @@ export function PscadParameters() {
               </TableBody>
             </Table>
           </div>
-
-          {parseInt(numProjects) > 1 && (
-            <div className="mt-4">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">Simulation Set</label>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <InfoIcon className="h-4 w-4 text-gray-400" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Enter simulation set details</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <Input 
-                type="text" 
-                placeholder="Enter simulation set" 
-                className="mt-1" 
-              />
-            </div>
-          )}
         </div>
       </section>
     </div>

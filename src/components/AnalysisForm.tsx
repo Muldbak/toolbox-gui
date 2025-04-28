@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -240,7 +239,7 @@ export function AnalysisForm() {
           </TooltipProvider>
         </h2>
         
-        <div className="space-y-6 max-w-3xl">
+        <div className="space-y-6 max-w-md">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Label>Label</Label>
@@ -255,7 +254,7 @@ export function AnalysisForm() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Input placeholder="" />
+            <Input placeholder="" className="w-full max-w-[250px]" />
           </div>
           
           <div className="space-y-2">
@@ -272,7 +271,7 @@ export function AnalysisForm() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Input placeholder="" />
+            <Input placeholder="" className="w-full max-w-[250px]" />
           </div>
         </div>
       </div>
